@@ -11,16 +11,16 @@ RUN apt-get -y install mysql-client mysql-server curl
 
 # Enable remote access (default is localhost only, we change this
 # otherwise our database would not be reachable from outside the container)
-RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0\ndefault-storage-engine = InnoDB\nlower_case_table_names = 1/" /etc/mysql/my.cnf
 
 # Install database
 ADD ./database.sql /var/db/database.sql
 
 # Set Standard settings
-ENV user student
-ENV password secret
+ENV user sakaiuser
+ENV password sakaipassword
 ENV url file:/var/db/database.sql
-ENV right READ
+ENV right WRITE
 
 # Install starting script
 ADD ./start-database.sh /usr/local/bin/start-database.sh
